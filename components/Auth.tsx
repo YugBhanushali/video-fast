@@ -27,6 +27,14 @@ const Auth = () => {
     setError(null);
     setLoading(true);
 
+    console.log(userData);
+
+    if (userData === undefined) {
+      toast.error("Please enter email and password");
+      setLoading(false);
+      return 0;
+    }
+
     try {
       if (signIn) {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -130,28 +138,31 @@ const Auth = () => {
           </div>
 
           {/* google auth btn */}
-          <Button
-            variant={"outline"}
-            className="flex justify-center items-center gap-x-2 w-full mt-2"
-            onClick={() => AuthWithGoogle()}
-          >
-            <div>
-              <FcGoogle />
-            </div>
-            <div>Login with Google</div>
-          </Button>
-
-          {/* separator */}
-          <div className=" flex justify-center items-center w-full gap-x-2 my-3 ">
-            <hr className="flex border-gray-200 border-[0.1px] w-full" />
-            <p className=" text-[10px] text-gray-500">OR</p>
-            <hr className="flex border-gray-200 border-[0.1px]  w-full" />
-          </div>
+          {signIn ? (
+            <>
+              <Button
+                variant={"outline"}
+                className="flex justify-center items-center gap-x-2 w-full mt-2"
+                onClick={() => AuthWithGoogle()}
+              >
+                <div>
+                  <FcGoogle />
+                </div>
+                <div>Login with Google</div>
+              </Button>
+              {/* separator */}
+              <div className=" flex justify-center items-center w-full gap-x-2 my-3 ">
+                <hr className="flex border-gray-200 border-[0.1px] w-full" />
+                <p className=" text-[10px] text-gray-500">OR</p>
+                <hr className="flex border-gray-200 border-[0.1px]  w-full" />
+              </div>
+            </>
+          ) : null}
 
           {/* login / signup */}
-          <div className="flex flex-col w-full gap-y-6">
+          <div className="flex flex-col w-full gap-y-6 mt-2">
             <div className="flex flex-col justify-start gap-y-1">
-              <Label className=" text-[13px]">Enter Name *</Label>
+              <Label className=" text-[13px]">Enter email *</Label>
               <Input
                 onChange={(e) => {
                   setuserData((prev: any) => {
@@ -164,6 +175,7 @@ const Auth = () => {
                 value={userData?.email}
                 type="email"
                 placeholder="lets.join@audionotes.com"
+                required
               />
             </div>
             <div className="flex flex-col justify-start gap-y-1">
@@ -180,6 +192,7 @@ const Auth = () => {
                 value={userData?.password}
                 type="password"
                 placeholder="password"
+                required
               />
             </div>
 

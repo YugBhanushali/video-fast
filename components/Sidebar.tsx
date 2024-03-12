@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 import { RxDashboard } from "react-icons/rx";
 import { RxAvatar } from "react-icons/rx";
@@ -8,6 +8,8 @@ import { Button } from "./ui/button";
 import { BsLightningChargeFill } from "react-icons/bs";
 import { FaArrowRightLong } from "react-icons/fa6";
 import CreditsModal from "./CreditsModal";
+import { supabase } from "@/supabase/supabase";
+import { useRouter } from "next/navigation";
 
 const sideBarContent = [
   {
@@ -29,10 +31,21 @@ const sideBarContent = [
 
 const Sidebar = () => {
   const [selectedItem, setSelectedItem] = useState("my-projects");
+  const router = useRouter();
 
   const handleItemClick = (itemId: any) => {
     setSelectedItem(itemId);
   };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const res = await supabase.auth.getUser();
+      if (!res.data.user) {
+        router.push("/auth");
+      }
+    };
+    checkAuth();
+  }, []);
 
   return (
     <div className="flex flex-col justify-start border  border-1 px-3 py-4 w-full h-[98vh] rounded-xl mx-2 my-2">
@@ -67,7 +80,15 @@ const Sidebar = () => {
             </div>
             <FaArrowRightLong color="#FF4D00" />
           </Button> */}
-          <CreditsModal />
+          <CreditsModal>
+            <Button className="flex justify-between bg-orange-100 hover:bg-orange-200">
+              <div className="flex text-black justify-center items-center gap-x-2">
+                <BsLightningChargeFill color="#FF4D00" />
+                Upgrade plan
+              </div>
+              <FaArrowRightLong color="#FF4D00" />
+            </Button>
+          </CreditsModal>
           <Button
             className="flex justify-start items-center gap-x-2"
             variant={"ghost"}

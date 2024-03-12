@@ -12,8 +12,73 @@ import { FaRegQuestionCircle } from "react-icons/fa";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
 import AccountModal from "./AccountModal";
+import { supabase } from "@/supabase/supabase";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import random from "random-name";
 
 const UserProfileDropdown = () => {
+  const [userInfo, setuserInfo] = useState<any>();
+  const router = useRouter();
+  const handleLogOut = async () => {
+    const res = await supabase.auth.signOut();
+    router.push("/auth");
+  };
+
+  const handleUserData = async () => {
+    const user = supabase.auth.getUser();
+    if (user) {
+      const email = (await user).data.user?.email;
+      console.log(email);
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .select();
+
+      console.log(data);
+
+      if (error) {
+        console.error("Error fetching user:", error.message);
+      } else {
+        setuserInfo(data);
+      }
+    }
+  };
+  useEffect(() => {
+    const handleGoogleAuth = async () => {
+      const res = await supabase.auth.getUser();
+
+      if (res.data.user) {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", String(res.data.user.email))
+          .select();
+        console.log(data, "from google ");
+
+        if (data?.length === 0) {
+          const addUser = await supabase
+            .from("users")
+            .insert([
+              {
+                created_at: new Date().toUTCString(),
+                email: String(res.data.user.email),
+                coins: 20,
+                name: String(random.first() + " " + random.last()),
+                plan_type: String("free"),
+              },
+            ])
+            .select();
+          console.log(addUser);
+        }
+      }
+    };
+    handleGoogleAuth().then(() => {
+      handleUserData();
+    });
+  }, []);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -43,16 +108,20 @@ const UserProfileDropdown = () => {
           </div>
           <div>
             <div className="font-bold text-[14px] flex justify-center items-center gap-x-2">
-              Tony stark{" "}
-              <Badge className=" bg-gray-400 text-[10px] ">Free</Badge>
+              {userInfo ? userInfo[0].name : "Free"}{" "}
+              <Badge className=" bg-gray-400 text-[10px] ">
+                {userInfo ? userInfo[0].plan_type : "Free"}
+              </Badge>
             </div>
-            <div className=" text-gray-400 text-[12px]">tony@gmail.com</div>
+            <div className=" text-gray-400 text-[12px]">
+              {userInfo ? userInfo[0].email : "tony@gmail.com"}
+            </div>
           </div>
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-            <AccountModal />
+            {userInfo ? <AccountModal {...userInfo[0]} /> : null}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
@@ -62,7 +131,7 @@ const UserProfileDropdown = () => {
             </div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogOut}>
             <div className="flex gap-x-2 justify-start items-center">
               <LogOut size={16} />
               Logout

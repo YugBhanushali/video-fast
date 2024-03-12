@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LogoImg from "../public/image.png";
 import Image from "next/image";
 import { Button } from "./ui/button";
@@ -11,6 +11,7 @@ import { supabase } from "@/supabase/supabase";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import random from "random-name";
 
 const Auth = () => {
   const [signIn, setsignIn] = useState(true);
@@ -51,6 +52,22 @@ const Auth = () => {
         }
 
         console.log(data);
+        if (data.user?.email) {
+          const addUser = await supabase
+            .from("users")
+            .insert([
+              {
+                created_at: new Date().toUTCString(),
+                email: String(userData?.email),
+                coins: 20,
+                name: String(random.first() + " " + random.last()),
+                plan_type: String("free"),
+              },
+            ])
+            .select();
+
+          console.log(addUser);
+        }
         toast.custom(
           <div>Confirm the email to complete the sign up process</div>
         );
@@ -64,6 +81,30 @@ const Auth = () => {
       setLoading(false);
     }
   };
+
+  const AuthWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
+      },
+    });
+
+    console.log(data);
+  };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const res = await supabase.auth.getUser();
+      if (res.data.user) {
+        router.push("/user");
+      }
+    };
+    checkAuth();
+  }, []);
 
   return (
     <>
@@ -92,6 +133,7 @@ const Auth = () => {
           <Button
             variant={"outline"}
             className="flex justify-center items-center gap-x-2 w-full mt-2"
+            onClick={() => AuthWithGoogle()}
           >
             <div>
               <FcGoogle />

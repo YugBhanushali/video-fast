@@ -18,17 +18,18 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { PiCoins } from "react-icons/pi";
 import { Slider } from "./ui/slider";
 
-const CreditsModal = () => {
+const CreditsModal = ({ children }: { children: React.ReactNode }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="flex justify-between bg-orange-100 hover:bg-orange-200">
+        {/* <Button className="flex justify-between bg-orange-100 hover:bg-orange-200">
           <div className="flex text-black justify-center items-center gap-x-2">
             <BsLightningChargeFill color="#FF4D00" />
             Upgrade plan
           </div>
           <FaArrowRightLong color="#FF4D00" />
-        </Button>
+        </Button> */}
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="flex flex-col justify-center items-center">

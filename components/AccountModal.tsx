@@ -15,8 +15,11 @@ import { Separator } from "./ui/separator";
 import { BsLightningChargeFill } from "react-icons/bs";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoAlertCircleSharp } from "react-icons/io5";
+import CreditsModal from "./CreditsModal";
 
-const AccountModal = () => {
+const AccountModal = (props: any) => {
+  console.log(props);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -36,30 +39,32 @@ const AccountModal = () => {
         <div className="flex flex-col gap-y-7 justify-start">
           <div className="flex flex-col justify-start ">
             <div className=" text-gray-500">Display name</div>
-            <div>Tony Stark</div>
+            <div>{props.name}</div>
           </div>
           <div className="flex flex-col justify-start ">
             <div className=" text-gray-500">Email address</div>
-            <div>tony@gmail.com</div>
+            <div>{props.email}</div>
           </div>
           <div className="flex justify-between items-center ">
             <div className=" flex flex-col justify-start">
               <div className=" text-gray-500">Current plan</div>
-              <div>Free</div>
+              <div>{props.plan_type}</div>
             </div>
             <div>
-              <Button className="flex justify-between bg-orange-100 hover:bg-orange-200 gap-x-2">
-                <div className="flex text-black justify-center items-center gap-x-2">
-                  <BsLightningChargeFill color="#FF4D00" />
-                  Upgrade plan
-                </div>
-                <FaArrowRightLong color="#FF4D00" />
-              </Button>
+              <CreditsModal>
+                <Button className="flex justify-between bg-orange-100 hover:bg-orange-200 gap-x-2">
+                  <div className="flex text-black justify-center items-center gap-x-2">
+                    <BsLightningChargeFill color="#FF4D00" />
+                    Upgrade plan
+                  </div>
+                  <FaArrowRightLong color="#FF4D00" />
+                </Button>
+              </CreditsModal>
             </div>
           </div>
           <div className="flex w-full justify-start gap-x-2 items-center bg-gray-100 p-3 rounded-lg text-gray-500">
             <IoAlertCircleSharp className=" text-gray-500" />
-            <span className=" text-[14px]">Your Credits = 24</span>
+            <span className=" text-[14px]">Your Credits = {props.coins}</span>
           </div>
 
           <Separator />

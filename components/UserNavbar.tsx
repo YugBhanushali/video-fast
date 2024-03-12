@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { PiCoinsDuotone } from "react-icons/pi";
 import { Bell, Plus } from "lucide-react";
@@ -6,8 +7,59 @@ import Image from "next/image";
 import UserProfileDropdown from "./UserProfileDropdown";
 import AccountModal from "./AccountModal";
 import Notifications from "./Notifications";
+import { supabase } from "@/supabase/supabase";
+import CreditsModal from "./CreditsModal";
+import random from "random-name";
 
 const UserNavbar = () => {
+  const [userInfo, setuserInfo] = useState<any>();
+  useEffect(() => {
+    const handleGoogleAuth = async () => {
+      const res = await supabase.auth.getUser();
+
+      if (res.data.user) {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", String(res.data.user.email))
+          .select();
+
+        if (!data) {
+          const addUser = await supabase
+            .from("users")
+            .insert([
+              {
+                created_at: new Date().toUTCString(),
+                email: String(res.data.user.email),
+                coins: 20,
+                name: String(random.first() + " " + random.last()),
+                plan_type: String("free"),
+              },
+            ])
+            .select();
+
+          console.log(addUser);
+        }
+      }
+    };
+    handleGoogleAuth();
+    const testing = async () => {
+      const res = await supabase.auth.getUser();
+      console.log(res);
+      if (res.data.user) {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", String(res.data.user.email))
+          .select();
+
+        if (data) {
+          setuserInfo(data[0]);
+        }
+      }
+    };
+    testing();
+  }, []);
   return (
     <div className="flex justify-between w-full  mt-6 p-2">
       {/* page type */}
@@ -21,15 +73,17 @@ const UserNavbar = () => {
           <div className="flex justify-between items-center p-[6px] bg-orange-100 rounded-lg gap-x-2">
             <div className="flex justify-center items-center gap-x-1 ml-1">
               <PiCoinsDuotone color="#FF4D00" />
-              Your credits: 5
+              Your credits: {userInfo ? userInfo.coins : "0"}
             </div>
             <div className="flex justify-center items-center">
-              <Button
-                variant={"default"}
-                className=" bg-[#FF4D00] rounded-sm p-1 h-5 w-5"
-              >
-                <Plus size={12} />
-              </Button>
+              <CreditsModal>
+                <Button
+                  variant={"default"}
+                  className=" bg-[#FF4D00] rounded-sm p-1 h-5 w-5"
+                >
+                  <Plus size={12} />
+                </Button>
+              </CreditsModal>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { AudioLines, Receipt } from "lucide-react";
 import { Button } from "./ui/button";
 import { BsLightningChargeFill } from "react-icons/bs";
 import { FaArrowRightLong } from "react-icons/fa6";
+import CreditsModal from "./CreditsModal";
 
 const sideBarContent = [
   {
@@ -59,13 +60,14 @@ const Sidebar = () => {
         </div>
 
         <div className="flex flex-col w-full gap-y-1">
-          <Button className="flex justify-between bg-orange-100 hover:bg-orange-200">
+          {/* <Button className="flex justify-between bg-orange-100 hover:bg-orange-200">
             <div className="flex text-black justify-center items-center gap-x-2">
               <BsLightningChargeFill color="#FF4D00" />
               Upgrade plan
             </div>
             <FaArrowRightLong color="#FF4D00" />
-          </Button>
+          </Button> */}
+          <CreditsModal />
           <Button
             className="flex justify-start items-center gap-x-2"
             variant={"ghost"}

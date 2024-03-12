@@ -3,6 +3,9 @@ import { Button } from "./ui/button";
 import { PiCoinsDuotone } from "react-icons/pi";
 import { Bell, Plus } from "lucide-react";
 import Image from "next/image";
+import UserProfileDropdown from "./UserProfileDropdown";
+import AccountModal from "./AccountModal";
+import Notifications from "./Notifications";
 
 const UserNavbar = () => {
   return (
@@ -13,9 +16,9 @@ const UserNavbar = () => {
       </div>
 
       {/* user */}
-      <div className="flex justify-center items-center gap-x-2">
+      <div className="flex justify-center items-center gap-x-2 mr-2">
         <div className="">
-          <div className="flex justify-between items-center p-[8px] bg-orange-100 rounded-lg gap-x-2">
+          <div className="flex justify-between items-center p-[6px] bg-orange-100 rounded-lg gap-x-2">
             <div className="flex justify-center items-center gap-x-1 ml-1">
               <PiCoinsDuotone color="#FF4D00" />
               Your credits: 5
@@ -23,7 +26,7 @@ const UserNavbar = () => {
             <div className="flex justify-center items-center">
               <Button
                 variant={"default"}
-                className=" bg-[#FF4D00] rounded-md p-1 h-7 w-7"
+                className=" bg-[#FF4D00] rounded-sm p-1 h-5 w-5"
               >
                 <Plus size={12} />
               </Button>
@@ -32,21 +35,15 @@ const UserNavbar = () => {
         </div>
 
         <div>
-          <Button className="p-2 rounded-full" variant={"outline"}>
-            <Bell size={20} />
-          </Button>
+          {/* <Button className="p-3 rounded-full" variant={"ghost"}>
+            <Bell size={18} className="m-0" />
+          </Button> */}
+          <Notifications />
         </div>
 
         <div>
-          <div className="flex rounded-full">
-            <Image
-              src={"https://github.com/shadcn.png"}
-              height={38}
-              width={38}
-              className=" rounded-full"
-              alt="test"
-            />
-          </div>
+          <UserProfileDropdown />
+          <AccountModal />
         </div>
       </div>
     </div>

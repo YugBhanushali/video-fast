@@ -35,7 +35,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex flex-col justify-start border  border-1 px-3 py-4 w-[20%] h-[98vh] rounded-xl mx-2 my-2">
+    <div className="flex flex-col justify-start border  border-1 px-3 py-4 w-full h-[98vh] rounded-xl mx-2 my-2">
       <div className="flex justify-start mt-2">
         <Logo />
       </div>

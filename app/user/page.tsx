@@ -5,11 +5,17 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="flex w-full">
-      <Sidebar />
-      <div className="flex flex-col w-full h-full">
-        <UserNavbar />
-        <MyVideos />
+    <div className="flex w-full ">
+      <div className=" fixed w-[20%] left-0 top-0 h-full">
+        <Sidebar />
+      </div>
+      <div className="flex flex-col ml-[22%] w-full h-full">
+        <div className="flex w-full">
+          <UserNavbar />
+        </div>
+        <div className="flex w-full ">
+          <MyVideos />
+        </div>
       </div>
     </div>
   );

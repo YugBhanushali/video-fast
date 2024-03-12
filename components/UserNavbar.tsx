@@ -43,7 +43,7 @@ const UserNavbar = () => {
 
         <div>
           <UserProfileDropdown />
-          <AccountModal />
+          {/* <AccountModal /> */}
         </div>
       </div>
     </div>

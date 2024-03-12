@@ -9,6 +9,8 @@ import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 import { supabase } from "@/supabase/supabase";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const Auth = () => {
   const [signIn, setsignIn] = useState(true);
@@ -16,28 +18,50 @@ const Auth = () => {
     email: string;
     password: string;
   }>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleAuth = async () => {
-    console.log(userData);
-    if (signIn) {
-      const res = await supabase.auth.signInWithPassword({
-        email: String(userData?.email),
-        password: String(userData?.password),
-      });
-      console.log(res);
-      toast.success("Loged In successfully");
-    } else {
-      const res = await supabase.auth.signUp({
-        email: String(userData?.email),
-        password: String(userData?.password),
-      });
-      if (res.data) {
-        console.log(res);
+    setError(null);
+    setLoading(true);
 
+    try {
+      if (signIn) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: String(userData?.email),
+          password: String(userData?.password),
+        });
+
+        if (error) {
+          throw new Error("Enter correct email id and password");
+        }
+
+        console.log(data);
+        toast.success("Logged in successfully");
+        router.push("/user");
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email: String(userData?.email),
+          password: String(userData?.password),
+        });
+
+        if (error) {
+          throw new Error("Enter correct email id and password");
+        }
+
+        console.log(data);
         toast.custom(
           <div>Confirm the email to complete the sign up process</div>
         );
       }
+    } catch (error: any) {
+      setError(error.message);
+      setTimeout(() => {
+        setError("");
+      }, 4000);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,7 +99,7 @@ const Auth = () => {
             <div>Login with Google</div>
           </Button>
 
-          {/* seprator */}
+          {/* separator */}
           <div className=" flex justify-center items-center w-full gap-x-2 my-3 ">
             <hr className="flex border-gray-200 border-[0.1px] w-full" />
             <p className=" text-[10px] text-gray-500">OR</p>
@@ -95,6 +119,7 @@ const Auth = () => {
                     };
                   });
                 }}
+                value={userData?.email}
                 type="email"
                 placeholder="lets.join@audionotes.com"
               />
@@ -110,6 +135,7 @@ const Auth = () => {
                     };
                   });
                 }}
+                value={userData?.password}
                 type="password"
                 placeholder="password"
               />
@@ -142,19 +168,33 @@ const Auth = () => {
                 variant={"default"}
                 className="flex w-full bg-[#3E52E1] text-white"
                 onClick={() => handleAuth()}
+                disabled={loading}
               >
-                {signIn ? "Log In" : "Sign Up"}
+                {loading ? (
+                  <div>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  </div>
+                ) : signIn ? (
+                  "Log In"
+                ) : (
+                  "Sign Up"
+                )}
               </Button>
             </div>
 
-            {/* if */}
+            {/* error message */}
+            {error && (
+              <div className="flex justify-center text-red-500">{error}</div>
+            )}
+
+            {/* switch between login and sign up */}
             <div className=" flex justify-center">
               {signIn ? (
                 <p className=" text-[12px]">
                   Don’t have an account?{" "}
                   <span
                     onClick={() => setsignIn(false)}
-                    className="text-[#3E52E1] font-semibold"
+                    className="text-[#3E52E1] font-semibold cursor-pointer"
                   >
                     Sign up
                   </span>
@@ -164,7 +204,7 @@ const Auth = () => {
                   Already have an account,{" "}
                   <span
                     onClick={() => setsignIn(true)}
-                    className="text-[#3E52E1] font-semibold"
+                    className="text-[#3E52E1] font-semibold cursor-pointer"
                   >
                     Sign In
                   </span>

@@ -11,9 +11,86 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { HiTemplate } from "react-icons/hi";
 import { FcLandscape } from "react-icons/fc";
 
+const templates = [
+  {
+    type: "Presentation",
+    imagePath: "/templates/Image.png",
+    width: 210,
+    height: 210,
+  },
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-1.png",
+    width: 210,
+    height: 210,
+  },
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-2.png",
+    width: 210,
+    height: 210,
+  },
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-3.png",
+    width: 210,
+    height: 210,
+  },
+
+  {
+    type: "Presentation",
+    imagePath: "/templates/Image.png",
+    width: 210,
+    height: 210,
+  },
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-1.png",
+    width: 210,
+    height: 210,
+  },
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-2.png",
+    width: 210,
+    height: 210,
+  },
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-3.png",
+    width: 210,
+    height: 210,
+  },
+
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-4.png",
+    width: 210,
+    height: 210,
+  },
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-5.png",
+    width: 210,
+    height: 210,
+  },
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-6.png",
+    width: 210,
+    height: 210,
+  },
+  {
+    type: "Presentation",
+    imagePath: "/templates/Template-4.png",
+    width: 210,
+    height: 210,
+  },
+];
+
 const MyVideos = () => {
   return (
-    <div className="flex flex-col w-full px-2">
+    <div className="flex flex-col w-full px-2 overflow-y-auto">
       <div className="flex justify-between items-center w-full mt-4">
         {/* my videos */}
         <div className="flex flex-col gap-y-0">
@@ -96,6 +173,23 @@ const MyVideos = () => {
       </div>
 
       {/* all types */}
+      <div className="flex justify-center items-center w-full mt-4 px-3">
+        <div className="flex justify-center items-center w-full mt-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 w-full">
+            {templates.map((eachTemplate, index) => (
+              <div key={index} className="flex flex-col justify-start">
+                <Image
+                  src={eachTemplate.imagePath}
+                  alt="temp"
+                  width={eachTemplate.width}
+                  height={eachTemplate.height}
+                />
+                <div>{eachTemplate.type}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
